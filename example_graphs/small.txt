@@ -1,0 +1,15 @@
+node C
+node D
+node E
+node F
+node G
+node H
+arc C D 3
+arc C E 2
+arc D F 4
+arc E D 1
+arc E F 2
+arc E G 3
+arc F G 2
+arc F H 1
+arc G H 2
