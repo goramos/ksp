@@ -14,9 +14,9 @@ python KSP.py [-h] -f FILE -l OD_LIST -k K
 GRAPH FILE FORMATTING INSTRUCTIONS
 The graph file supports three types of graphs' entities: node, edge, arc. When creating the graph file, provide just one entity per line. 
 Usage:
-	node NAME		nodes of the graph
+	node NAME	nodes of the graph
 	edge N1 N2 W	create an undirected link between N1 and N2 with weight W
-	arc N1 N2 W		create a directed link from N1 to N2 with weight W
+	arc N1 N2 W	create a directed link from N1 to N2 with weight W
 
 	Example 1 - an undirected graph:
 		node A
