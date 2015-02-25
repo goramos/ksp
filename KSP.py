@@ -1,5 +1,5 @@
 '''
-KSP v1.21
+KSP v1.22
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -352,3 +352,4 @@ if __name__ == '__main__':
 	K = args.K
 	
 	run(graph_file, OD_list, K)
+	
