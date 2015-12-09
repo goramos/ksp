@@ -1,5 +1,5 @@
 '''
-KSP v1.22
+KSP v1.23
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -23,6 +23,15 @@ v1.21 (5-Jun-2014) -  Created the function getKRoutes(graph_file, origin, destin
                       This function runs one OD-pair each time. For multiple OD-pairs,
                       it needs to be called multiple times.
 v1.22 (25-Nov-2014) - Changed the type of edges' length attribute from int to float.
+v1.23 (09-Dez-2015) - Fixed the problem that was allowing the occurrence of loops in 
+                      the paths. Creation of function generateGraphFromList that generates 
+                      the list of nodes and edges from given lists. Creation of function 
+                      getKRoutes to generate the K routes of a given OD pair AND the list 
+                      of nodes and vertices (the other version creates such lists from the 
+                      network file). Creation of function pickEdgesListAll to return all 
+                      edges arriving and leaving the given node. Changed the way edges 
+                      are printed: now a '#' symbol is used to separate its start and
+                      end nodes.
 <new versions here>
 '''
 
@@ -66,6 +75,24 @@ def generateGraph(graph_file):
 	fname.close()
 	return V, E
 
+# generate the graph from a list of nodes and a list of edges
+def generateGraphFromList(listNodes, listEdges, generateBackwardEdges=False):
+	V = []
+	E = []
+	
+	# generate the list of nodes
+	for v in listNodes:
+		V.append(Node(v))
+	
+	# generate the list of edges
+	for e in listEdges:
+		E.append(Edge(e[0], e[1], e[2]))
+		# generate backward edges
+		if generateBackwardEdges:
+			E.append(Edge(e[1], e[0], e[2]))
+	
+	return V, E
+
 # reset graph's variables to default
 def resetGraph(N, E):
 	for node in N:
@@ -87,11 +114,19 @@ def pickSmallestNode(N):
 			minNode = node
 	return minNode
 
-# returns the edges list of node u
+# returns the list of edges starting in node u
 def pickEdgesList(u, E):
 	uv = []
 	for edge in E:
 		if edge.start == u.name:
+			uv.append(edge)
+	return uv
+
+# returns the list of edges that start or end in node u
+def pickEdgesListAll(u, E):
+	uv = []
+	for edge in E:
+		if edge.start == u.name or edge.end == u.name:
 			uv.append(edge)
 	return uv
 
@@ -173,14 +208,14 @@ def pathToString(S):
 	for i in xrange(0,len(S)-1):
 		if i > 0:
 			strout += ', '
-		strout += '\'' + S[i].name + S[i+1].name + '\''
+		strout += '\'' + str(S[i].name) + "#" + str(S[i+1].name) + '\''
 	return strout + ']'
 
 # generate a list with the edges' names of a given route S
 def pathToListOfString(S):
 	lout = []
 	for i in xrange(0,len(S)-1):
-		lout.append(S[i].name + S[i+1].name)
+		lout.append(str(S[i].name) + "#" + str(S[i+1].name))
 	return lout
 
 # get the directed edge from u to v
@@ -194,10 +229,10 @@ def runKShortestPathsStep(V, E, origin, destination, k, A, B):
 	# Step 0: iteration 1
 	if k == 1:
 		A.append(findShortestPath(V, E, origin, destination, []))
-	
-	# Step 1: iterations 2 to K
+		
+	# Step I: iterations 2 to K
 	else:
-		lastPath = A[-1]
+		lastPath = A[-1] 
 		for i in range(0, len(lastPath)-1):
 			# Step I(a)
 			spurNode = lastPath[i]
@@ -209,6 +244,12 @@ def runKShortestPathsStep(V, E, origin, destination, k, A, B):
 					ed = getEdge(E, spurNode.name, path[i+1].name)
 					toIgnore.append(ed)
 			
+			# ignore the edges passing through nodes already in rootPath (except for the spurNode)
+			for noder in rootPath[:-1]: 
+				edgesn = pickEdgesListAll(noder, E)
+				for ee in edgesn:
+					toIgnore.append(ee)
+			
 			# Step I(b)
 			spurPath = findShortestPath(V, E, spurNode.name, destination, toIgnore)
 			if spurPath[0] != spurNode:
@@ -217,6 +258,10 @@ def runKShortestPathsStep(V, E, origin, destination, k, A, B):
 			# Step I(c)
 			totalPath = rootPath + spurPath[1:]
 			B.append(totalPath)
+		
+		# handle the case where no spurs (new paths) are available
+		if not B:
+			return False
 			
 		#Step II
 		bestInB = None
@@ -229,7 +274,9 @@ def runKShortestPathsStep(V, E, origin, destination, k, A, B):
 		A.append(bestInB)
 		while bestInB in B:
 			B.remove(bestInB)
-	
+		
+	return True
+
 # Yen's K shortest loopless paths algorithm
 def KShortestPaths(V, E, origin, destination, K):
 	# the K shortest paths
@@ -240,10 +287,11 @@ def KShortestPaths(V, E, origin, destination, K):
 	
 	for k in xrange(1,K+1):
 		try:
-			runKShortestPathsStep(V, E, origin, destination, k, A, B)
+ 			if not runKShortestPathsStep(V, E, origin, destination, k, A, B):
+			 	break
 		except:
-			print 'Only %d paths were found!' % (k-1)
-			break
+ 			print 'Problem on generating more paths@ Only %d paths were found!' % (k-1)
+ 			break
 		
 	return A
 
@@ -315,6 +363,22 @@ def getKRoutes(graph_file, origin, destination, K):
 		lout.append([pathToListOfString(path), calcPathLength(path, E)])
 		
 	return lout
+
+# return a list with the K shortest paths for the given origin-destination pair,
+# given the lists of nodes and edges
+# this function was created to be called externally by another applications
+def getKRoutes(N, E, origin, destination, K):
+	
+	lout = []
+	
+	# find K shortest paths for this specific OD-pair
+	S = KShortestPaths(N, E, origin, destination, K)
+	
+	for path in S:
+		# store the path (in list of strings format) and cost to the out list 
+		lout.append([pathToListOfString(path), calcPathLength(path, E)])
+		
+	return lout
 	
 # initializing procedure
 if __name__ == '__main__':
@@ -352,4 +416,3 @@ if __name__ == '__main__':
 	K = args.K
 	
 	run(graph_file, OD_list, K)
-	
