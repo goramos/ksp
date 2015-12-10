@@ -30,7 +30,7 @@ v1.23 (09-Dez-2015) - Fixed the problem that was allowing the occurrence of loop
                       of nodes and vertices (the other version creates such lists from the 
                       network file). Creation of function pickEdgesListAll to return all 
                       edges arriving and leaving the given node. Changed the way edges 
-                      are printed: now a '#' symbol is used to separate its start and
+                      are printed: now a '|' symbol is used to separate its start and
                       end nodes.
 <new versions here>
 '''
@@ -133,7 +133,7 @@ def pickEdgesListAll(u, E):
 # Dijkstra's shortest path algorithm
 def findShortestPath(N, E, origin, destination, ignoredEdges):
 	
-	#reset the graph (so as to discard information from previous runs)
+	# reset the graph (so as to discard information from previous runs)
 	resetGraph(N, E)
 	
 	# set origin node distance to zero, and get destination node
@@ -190,7 +190,7 @@ def printGraph(N, E):
 			print(node.name, node.dist, previous.name)
 	print('edges:')
 	for edge in E:
-		print(edge.start, edge.end, edge.length)
+		print(str(edge.start) + '|' + str(edge.end), edge.length)
 
 # print S path
 def printPath(S, E):
@@ -208,14 +208,14 @@ def pathToString(S):
 	for i in xrange(0,len(S)-1):
 		if i > 0:
 			strout += ', '
-		strout += '\'' + str(S[i].name) + "#" + str(S[i+1].name) + '\''
+		strout += '\'' + str(S[i].name) + '|' + str(S[i+1].name) + '\''
 	return strout + ']'
 
 # generate a list with the edges' names of a given route S
 def pathToListOfString(S):
 	lout = []
 	for i in xrange(0,len(S)-1):
-		lout.append(str(S[i].name) + "#" + str(S[i+1].name))
+		lout.append(str(S[i].name) + '|' + str(S[i+1].name))
 	return lout
 
 # get the directed edge from u to v
@@ -263,7 +263,7 @@ def runKShortestPathsStep(V, E, origin, destination, k, A, B):
 		if not B:
 			return False
 			
-		#Step II
+		# Step II
 		bestInB = None
 		bestInBlength = 999999999
 		for path in B:
@@ -333,7 +333,7 @@ def run(graph_file, OD_pairs, K):
 		S = KShortestPaths(N, E, o, d, K)
 		
 		# print the result for this specific OD-pair
-		print '\t[ # ' + o + d + ' flow'
+		print '\t[ # ' + str(o) + '|' + str(d) + ' flow'
 		last = len(S)-1
 		for i, path in enumerate(S):
 			comma = ','
