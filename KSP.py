@@ -25,11 +25,12 @@ v1.21 (5-Jun-2014) -  Created the function getKRoutes(graph_file, origin, destin
 v1.22 (25-Nov-2014) - Changed the type of edges' length attribute from int to float.
 v1.23 (09-Dez-2015) - Fixed the problem that was allowing the occurrence of loops in 
                       the paths. Creation of function generateGraphFromList that generates 
-                      the list of nodes and edges from given lists. Creation of function 
+                      the list of nodes and edges from given lists. Creation of a new function 
                       getKRoutes to generate the K routes of a given OD pair AND the list 
                       of nodes and vertices (the other version creates such lists from the 
-                      network file). Creation of function pickEdgesListAll to return all 
-                      edges arriving and leaving the given node. Changed the way edges 
+                      network file). The old version still works but was renamed to 
+                      getKRoutesNetFile. Creation of function pickEdgesListAll to return
+                      all edges arriving and leaving the given node. Changed the way edges 
                       are printed: now a '|' symbol is used to separate its start and
                       end nodes.
 <new versions here>
@@ -347,8 +348,8 @@ def run(graph_file, OD_pairs, K):
 	print ']'
 
 # return a list with the K shortest paths for the given origin-destination pair
-# this function was created to be called externally by another applications
-def getKRoutes(graph_file, origin, destination, K):
+# (this function was created to be called externally by another applications)
+def getKRoutesNetFile(graph_file, origin, destination, K):
 	
 	lout = []
 	
@@ -365,8 +366,8 @@ def getKRoutes(graph_file, origin, destination, K):
 	return lout
 
 # return a list with the K shortest paths for the given origin-destination pair,
-# given the lists of nodes and edges
-# this function was created to be called externally by another applications
+# given the lists of nodes and edges (this function was created to be called 
+# externally by another applications)
 def getKRoutes(N, E, origin, destination, K):
 	
 	lout = []
