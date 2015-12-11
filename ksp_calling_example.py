@@ -14,21 +14,28 @@ Created on June 5, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 import KSP
 
 # parameters to be passed to the KSP algorithm
-graph_file = 'example_graphs/ortuzar10.1.txt' # the graph of the traffic network (the file format is specified by the algorithm's help)
-origin = 'A'                                  # the origin node
-destination = 'L'                             # the destionation node
-K = 4                                         # the number of paths to find
+graph_file = 'example_graphs/ortuzar10.1.txt'       # the graph of the traffic network (the file format is specified by the algorithm's help)
+ODpairs = [['A','L'],['A','M'],['B','L'],['B','M']] # the list of origins and destinations
+K = 4                                               # the number of paths to find
 
-# run the algorithm (return the K routes and associated costs of the given origin-destination pair)
-routes = KSP.getKRoutes(graph_file, origin, destination, K)
+# generate the list of vertices and edges from the network file
+V, E = KSP.generateGraph(graph_file)
 
-# print routes
-for i in routes:
+# for each OD pair
+for od in ODpairs:
+
+	print 'Pair %s|%s' % (od[0], od[1])
 	
-	# the route as a list of strings, where each element corresponds to a link's name
-	route = i[0]
+	# run the algorithm (return the K routes and associated costs of the given origin-destination pair)
+	routes = KSP.getKRoutes(V, E, od[0], od[1], K)
 	
-	# the cost of the route (a float value)
-	cost = i[1]
-	
-	print '%s has cost %.2f' % (route, cost)
+	# print the routes
+	for i in routes:
+		
+		# the route as a list of strings, where each element corresponds to a link's name
+		route = i[0]
+		
+		# the cost of the route (a float value)
+		cost = i[1]
+		
+		print '%s has cost %.2f' % (route, cost)
