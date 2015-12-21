@@ -14,7 +14,7 @@ Created on June 5, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 import KSP
 
 # parameters to be passed to the KSP algorithm
-graph_file = 'example_graphs/OW.txt'       # the graph of the traffic network (the file format is specified by the algorithm's help)
+graph_file = 'example_graphs/OW.txt'                # the graph of the traffic network (the file format is specified by the algorithm's help)
 ODpairs = [['A','L'],['A','M'],['B','L'],['B','M']] # the list of origins and destinations
 K = 4                                               # the number of paths to find
 
