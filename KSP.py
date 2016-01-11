@@ -383,7 +383,7 @@ def getKRoutes(N, E, origin, destination, K):
 	
 # initializing procedure
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='KSP v1.22\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1].',
+	parser = argparse.ArgumentParser(description='KSP v1.23\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1].',
 		epilog='GRAPH FILE FORMATTING INSTRUCTIONS' +
 		'\nThe graph file supports three types of graphs\' entities: node, edge, arc. When creating the graph file, provide just one entity per line. \nUsage:'+
 		'\n  node NAME\t  nodes of the graph' +
