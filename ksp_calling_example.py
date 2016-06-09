@@ -14,20 +14,21 @@ Created on June 5, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 import KSP
 
 # parameters to be passed to the KSP algorithm
-graph_file = 'example_graphs/OW.txt'                # the graph of the traffic network (the file format is specified by the algorithm's help)
-ODpairs = [['A','L'],['A','M'],['B','L'],['B','M']] # the list of origins and destinations
-K = 4                                               # the number of paths to find
+graph_file = 'OW.net'    # the graph of the traffic network (the file format is specified by the algorithm's help)
+ODpairs = ['A|L', 'B|M'] # the list of origins and destinations
+K = 4                    # the number of paths to find
 
 # generate the list of vertices and edges from the network file
-V, E = KSP.generateGraph(graph_file)
+V, E, OD = KSP.generateGraph(graph_file)
 
 # for each OD pair
-for od in ODpairs:
+for od in ODpairs: # to look at all pairs, use the variable OD (above)
 
-	print 'Pair %s|%s' % (od[0], od[1])
+	#~ print 'Pair %s' % od
+	origin, destination = od.split('|')
 	
 	# run the algorithm (return the K routes and associated costs of the given origin-destination pair)
-	routes = KSP.getKRoutes(V, E, od[0], od[1], K)
+	routes = KSP.getKRoutes(V, E, origin, destination, K)
 	
 	# print the routes
 	for i in routes:
@@ -39,3 +40,4 @@ for od in ODpairs:
 		cost = i[1]
 		
 		print '%s has cost %.2f' % (route, cost)
+
