@@ -1,5 +1,5 @@
 '''
-KSP v1.3
+KSP v1.31
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -41,6 +41,8 @@ v1.3 (07-Jun-2016) -  Several adjustments to make the script compliant with the 
 					  generateGraph function now also returns the set of OD pairs, (iv) the
 					  edges lengths are now called costs, (v) alterado o tipo arc para dedge,
 					  and (vi) minor issues.
+v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the current network 
+                      specification, links are named with a dash (A-B) rather than a pipe (A|B).
 <new versions here>
 
 '''
@@ -59,7 +61,8 @@ class Node:
 
 # represents an edge in the graph
 class Edge:
-	def __init__(self, u, v, cost):
+	def __init__(self, name, u, v, cost):
+		self.name = name
 		self.start = u
 		self.end = v
 		self.cost = cost # represents the edge's cost under free flow
@@ -119,9 +122,9 @@ def generateGraph(graph_file):
 			cost = function[2].evaluate(param_values) # calculate the cost
 			
 			# create the edge(s)
-			E.append(Edge(taglist[2], taglist[3], cost))
+			E.append(Edge(taglist[1], taglist[2], taglist[3], cost))
 			if taglist[0] == 'edge':
-				E.append(Edge(taglist[3], taglist[2], cost))
+				E.append(Edge(taglist[1], taglist[3], taglist[2], cost))
 			
 		elif taglist[0] == 'od':
 			OD.append(taglist[1])
@@ -239,43 +242,20 @@ def findShortestPath(N, E, origin, destination, ignoredEdges):
 	
 	return S
 
-# print vertices and edges
-def printGraph(N, E):
-	print('vertices:')
-	for node in N:
-		previous = node.prev
-		if previous == None:
-			print(node.name, node.dist, previous)
-		else:
-			print(node.name, node.dist, previous.name)
-	print('edges:')
-	for edge in E:
-		print(str(edge.start) + '|' + str(edge.end), edge.cost)
-
-# print S path
-def printPath(S, E):
-	strout = ''
-	for node in S:
-		if strout != '':
-			strout += ' - '
-		strout += node.name
-		
-	print "%g = %s" % (calcPathCost(S, E), strout)
-
 # generate a string from the path S in a specific format
-def pathToString(S):
+def pathToString(S, E):
 	strout = '['
 	for i in xrange(0,len(S)-1):
 		if i > 0:
 			strout += ', '
-		strout += '\'' + str(S[i].name) + '|' + str(S[i+1].name) + '\''
+		strout += '\'' + getEdge(E, S[i].name, S[i+1].name).name + '\''
 	return strout + ']'
 
 # generate a list with the edges' names of a given route S
-def pathToListOfString(S):
+def pathToListOfString(S, E):
 	lout = []
 	for i in xrange(0,len(S)-1):
-		lout.append(str(S[i].name) + '|' + str(S[i+1].name))
+		lout.append(getEdge(E, S[i].name, S[i+1].name).name)
 	return lout
 
 # get the directed edge from u to v
@@ -393,7 +373,7 @@ def run(graph_file, K, OD_pairs=None):
 			comma = ','
 			if i == last:
 				comma = ''
-			print '\t\t' + pathToString(path) + comma + " # cost " + str(calcPathCost(path, E))
+			print '\t\t' + pathToString(path, E) + comma + " # cost " + str(calcPathCost(path, E))
 		comma = ','
 		if iod == lastod:
 			comma = ''
@@ -415,7 +395,7 @@ def getKRoutesNetFile(graph_file, origin, destination, K):
 	
 	for path in S:
 		# store the path (in list of strings format) and cost to the out list 
-		lout.append([pathToListOfString(path), calcPathCost(path, E)])
+		lout.append([pathToListOfString(path, E), calcPathCost(path, E)])
 		
 	return lout
 
@@ -431,13 +411,13 @@ def getKRoutes(N, E, origin, destination, K):
 	
 	for path in S:
 		# store the path (in list of strings format) and cost to the out list 
-		lout.append([pathToListOfString(path), calcPathCost(path, E)])
+		lout.append([pathToListOfString(path, E), calcPathCost(path, E)])
 		
 	return lout
 	
 # initializing procedure
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='KSP v1.3\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
+	parser = argparse.ArgumentParser(description='KSP v1.31\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
 		epilog='GRAPH FILE FORMATTING INSTRUCTIONS' +
 		'\nSee [3] for complete instructions.'+
 		'\n\nREFERENCES' +
