@@ -347,11 +347,11 @@ def KShortestPaths(V, E, origin, destination, K):
 	
 	for k in xrange(1,K+1):
 		try:
- 			if not runKShortestPathsStep(V, E, origin, destination, k, A, B):
-			 	break
+			if not runKShortestPathsStep(V, E, origin, destination, k, A, B):
+				break
 		except:
- 			print 'Problem on generating more paths! Only %d paths were found!' % (k-1)
- 			break
+			print 'Problem on generating more paths! Only %d paths were found!' % (k-1)
+			break
 		
 	return A
 
