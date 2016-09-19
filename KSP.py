@@ -43,6 +43,8 @@ v1.3 (07-Jun-2016) -  Several adjustments to make the script compliant with the 
 					  and (vi) minor issues.
 v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the current network 
                       specification, links are named with a dash (A-B) rather than a pipe (A|B).
+v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in the forward link 
+                      but B-A in the backward one).
 <new versions here>
 
 '''
@@ -124,7 +126,7 @@ def generateGraph(graph_file):
 			# create the edge(s)
 			E.append(Edge(taglist[1], taglist[2], taglist[3], cost))
 			if taglist[0] == 'edge':
-				E.append(Edge(taglist[1], taglist[3], taglist[2], cost))
+				E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost))
 			
 		elif taglist[0] == 'od':
 			OD.append(taglist[1])
