@@ -72,7 +72,7 @@ class Edge:
 		self.cost = cost # represents the edge's cost under free flow
 
 # read a text file and generate the graph according to declarations
-def generateGraph(graph_file, flow):
+def generateGraph(graph_file, flow=0.0):
 	V = [] # vertices
 	E = [] # edges
 	F = {} # cost functions

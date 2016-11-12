@@ -17,7 +17,7 @@ import KSP
 graph_file = 'OW.net'    # the graph of the traffic network (the file format is specified by the algorithm's help)
 ODpairs = ['A|L', 'B|M'] # the list of origins and destinations
 K = 4                    # the number of paths to find
-flow = 0.0               # the flow of vehicles to be used when computing the links' costs
+flow = 0.0               # the flow of vehicles to be used when computing the links' costs (the default is zero)
 
 # generate the list of vertices and edges from the network file
 V, E, OD = KSP.generateGraph(graph_file, flow)
