@@ -1,5 +1,5 @@
 '''
-KSP v1.31
+KSP v1.33
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -45,6 +45,8 @@ v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the curre
                       specification, links are named with a dash (A-B) rather than a pipe (A|B).
 v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in the forward link 
                       but B-A in the backward one).
+v1.33 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
+					  the links' costs.
 <new versions here>
 
 '''
@@ -70,7 +72,7 @@ class Edge:
 		self.cost = cost # represents the edge's cost under free flow
 
 # read a text file and generate the graph according to declarations
-def generateGraph(graph_file):
+def generateGraph(graph_file, flow):
 	V = [] # vertices
 	E = [] # edges
 	F = {} # cost functions
@@ -120,7 +122,7 @@ def generateGraph(graph_file):
 			# process the cost
 			function = F[taglist[4]] # get the corresponding function
 			param_values = dict(zip(function[1], map(float, taglist[5:]))) # associate constants and values specified in the line (in order of occurrence)
-			param_values[function[0]] = 0.0 # add the parameter with value 0
+			param_values[function[0]] = flow # set the function's parameter with the flow value 
 			cost = function[2].evaluate(param_values) # calculate the cost
 			
 			# create the edge(s)
@@ -349,10 +351,10 @@ def calcPathCost(S, E):
 	return cost
 
 # main procedure for many OD-pairs
-def run(graph_file, K, OD_pairs=None):
+def run(graph_file, K, OD_pairs=None, flow=0.0):
 	
 	# read graph from file
-	N, E, OD = generateGraph(graph_file)
+	N, E, OD = generateGraph(graph_file, flow)
 	
 	# process the list of OD-pairs (if no OD pair was defined by the 
 	# user, then all OD pairs from the network file are considered)
@@ -434,12 +436,15 @@ if __name__ == '__main__':
 						help='the graph file')
 	parser.add_argument('-k', dest='K', type=int, required=True,
 						help='number of shortest paths to find')
-	parser.add_argument('-l', dest='OD_list', required=False,
+	parser.add_argument('-l', dest='OD_pairs', required=False,
 						help='list of OD-pairs, in the format \'O|D;O|D;[and so on]\', where O are valid origin nodes, and D are valid destination nodes')
+	parser.add_argument('-n', dest='flow', type=float, required=False, default=0.0,
+						help='number of vehicles (flow) to consider when computing the links\' costs')
 	args = parser.parse_args()
 	
 	graph_file = args.file
-	OD_list = args.OD_list
+	OD_pairs = args.OD_pairs
 	K = args.K
+	flow = args.flow
 	
-	run(graph_file, K, OD_list)
+	run(graph_file=graph_file, K=K, OD_pairs=OD_pairs, flow=flow)
