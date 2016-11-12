@@ -14,12 +14,13 @@ Created on June 5, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 import KSP
 
 # parameters to be passed to the KSP algorithm
-graph_file = 'OW.net'    # the graph of the traffic network (the file format is specified by the algorithm's help)
+graph_file = '../network-files/OW.net'    # the graph of the traffic network (the file format is specified by the algorithm's help)
 ODpairs = ['A|L', 'B|M'] # the list of origins and destinations
 K = 4                    # the number of paths to find
+flow = 0.0               # the flow of vehicles to be used when computing the links' costs
 
 # generate the list of vertices and edges from the network file
-V, E, OD = KSP.generateGraph(graph_file)
+V, E, OD = KSP.generateGraph(graph_file, flow)
 
 # for each OD pair
 for od in ODpairs: # to look at all pairs, use the variable OD (above)
