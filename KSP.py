@@ -1,5 +1,5 @@
 '''
-KSP v1.33
+KSP v1.42
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -45,7 +45,7 @@ v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the curre
                       specification, links are named with a dash (A-B) rather than a pipe (A|B).
 v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in the forward link 
                       but B-A in the backward one).
-v1.33 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
+v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
 					  the links' costs.
 <new versions here>
 
