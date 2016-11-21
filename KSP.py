@@ -1,3 +1,4 @@
+#!/usr/bin/python
 '''
 KSP v1.42
 
@@ -51,7 +52,6 @@ v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used 
 
 '''
 
-#!/usr/bin/python
 import argparse
 from py_expression_eval import Parser
 
@@ -421,7 +421,7 @@ def getKRoutes(N, E, origin, destination, K):
 	
 # initializing procedure
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='KSP v1.31\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
+	parser = argparse.ArgumentParser(description='KSP v1.42\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
 		epilog='GRAPH FILE FORMATTING INSTRUCTIONS' +
 		'\nSee [3] for complete instructions.'+
 		'\n\nREFERENCES' +
@@ -431,7 +431,7 @@ if __name__ == '__main__':
 		'\n\nAUTHOR' +
 		'\nCreated in February 10, 2014, by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>.',
 		formatter_class=argparse.RawTextHelpFormatter)
-	
+
 	parser.add_argument('-f', dest='file', required=True,
 						help='the graph file')
 	parser.add_argument('-k', dest='K', type=int, required=True,
@@ -441,10 +441,10 @@ if __name__ == '__main__':
 	parser.add_argument('-n', dest='flow', type=float, required=False, default=0.0,
 						help='number of vehicles (flow) to consider when computing the links\' costs')
 	args = parser.parse_args()
-	
+
 	graph_file = args.file
 	OD_pairs = args.OD_pairs
 	K = args.K
 	flow = args.flow
-	
+
 	run(graph_file=graph_file, K=K, OD_pairs=OD_pairs, flow=flow)
