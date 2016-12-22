@@ -429,7 +429,7 @@ if __name__ == '__main__':
 		'\n[2] http://wiki.inf.ufrgs.br/K_Shortest_Loopless_Paths.' +
 		'\n[3] http://wiki.inf.ufrgs.br/network_files_specification.' +
 		'\n\nAUTHOR' +
-		'\nCreated in February 10, 2014, by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>.',
+		'\nCreated on February 10, 2014, by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>.',
 		formatter_class=argparse.RawTextHelpFormatter)
 
 	parser.add_argument('-f', dest='file', required=True,
