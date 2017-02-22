@@ -12,7 +12,7 @@ v1.1 (20-Apr-2014) -  Adjusted error related with the creation of root and spur 
 					  were identified in Ortuzar network for AM pair and K=4).
 v1.2 (12-May-2014) -  Call of algorithm was changed from 'main(...)' to 'run(...)', and
 					  parameters 'origin' and 'destination' were replaced by 'OD_list'
-					  (a list of OD-pairs). Furthermore, the list of parameters of the 
+					  (a list of OD-pairs). Furthermore, the list of parameters of the
 					  command line call (__main__) was changed accordingly.
 					  Finally, the output text was changed according to the specification
 					  defined by Dr. Ana Bazzan.
@@ -24,30 +24,33 @@ v1.21 (5-Jun-2014) -  Created the function getKRoutes(graph_file, origin, destin
                       This function runs one OD-pair each time. For multiple OD-pairs,
                       it needs to be called multiple times.
 v1.22 (25-Nov-2014) - Changed the type of edges' length attribute from int to float.
-v1.23 (09-Dez-2015) - Fixed the problem that was allowing the occurrence of loops in 
-                      the paths. Creation of function generateGraphFromList that generates 
-                      the list of nodes and edges from given lists. Creation of a new function 
-                      getKRoutes to generate the K routes of a given OD pair AND the list 
-                      of nodes and vertices (the other version creates such lists from the 
-                      network file). The old version still works but was renamed to 
+v1.23 (09-Dez-2015) - Fixed the problem that was allowing the occurrence of loops in
+                      the paths. Creation of function generateGraphFromList that generates
+                      the list of nodes and edges from given lists. Creation of a new function
+                      getKRoutes to generate the K routes of a given OD pair AND the list
+                      of nodes and vertices (the other version creates such lists from the
+                      network file). The old version still works but was renamed to
                       getKRoutesNetFile. Creation of function pickEdgesListAll to return
-                      all edges arriving and leaving the given node. Changed the way edges 
+                      all edges arriving and leaving the given node. Changed the way edges
                       are printed: now a '|' symbol is used to separate its start and
                       end nodes.
 v1.3 (07-Jun-2016) -  Several adjustments to make the script compliant with the new network
-					  files specification (http://wiki.inf.ufrgs.br/network_files_specification). 
+					  files specification (http://wiki.inf.ufrgs.br/network_files_specification).
 					  Specifically: (i) the script recognises only the new format, (ii) no
-					  OD pairs are required when calling the script (in this case, the routes 
+					  OD pairs are required when calling the script (in this case, the routes
 					  are generated for ALL OD pairs specified in the network file), (iii) the
 					  generateGraph function now also returns the set of OD pairs, (iv) the
 					  edges lengths are now called costs, (v) alterado o tipo arc para dedge,
 					  and (vi) minor issues.
-v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the current network 
+v1.31 (25-Aug-2016) - Small fixes related to edges names; according to the current network
                       specification, links are named with a dash (A-B) rather than a pipe (A|B).
-v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in the forward link 
+v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in the forward link
                       but B-A in the backward one).
 v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
 					  the links' costs.
+v1.43 (22-Fev-2017) - Documentation for the classes, addition of the func_info attribute in the Edge
+                          class along with minor changes in the generateGraph function regarding these
+                          changes in the class.
 <new versions here>
 
 '''
@@ -55,89 +58,118 @@ v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used 
 import argparse
 from py_expression_eval import Parser
 
-# represents a node in the graph
-class Node:
-	def __init__(self, name):
-		self.name = name	# name of the node
-		self.dist = 1000000	# distance to this node from start node
-		self.prev = None	# previous node to this node
-		self.flag = 0		# access flag
+class Node(object):
+    """
+    Represents a node in the graph.
+    """
+    def __init__(self, name):
+        """
+        In:
+            name:string = Name of the node.
+        """
+        self.name = name	# name of the node
+        self.dist = 1000000	# distance to this node from start node
+        self.prev = None	# previous node to this node
+        self.flag = 0		# access flag
 
-# represents an edge in the graph
-class Edge:
-	def __init__(self, name, u, v, cost):
-		self.name = name
-		self.start = u
-		self.end = v
-		self.cost = cost # represents the edge's cost under free flow (or under the specified flow)
+    def __repr__(self):
+        return repr(self.name)
 
-# read a text file and generate the graph according to declarations
-def generateGraph(graph_file, flow=0.0):
-	V = [] # vertices
-	E = [] # edges
-	F = {} # cost functions
-	OD = [] # OD pairs
+class Edge(object):
+    """
+    Represents an edge in the graph.
+    In:
+        name:String = Name of the edge ("start"-"end").
+        start:Node = Start node of the edge.
+        end:Node = End node of the edge.
+        cost:Float = Cost of the edge.
+        func_info:List = List with the variable and parser instance of the function.
 
-	lineid = 0
-	for line in open(graph_file, 'r'):
-		
-		lineid += 1
-		
-		# ignore \n
-		line = line.rstrip()
-		
-		# ignore comments
-		hash_pos = line.find('#')
-		if hash_pos > -1:
-			line = line[:hash_pos]
-		
-		# split the line
-		taglist = line.split()
-		if len(taglist) == 0:
-			continue
-		
-		if taglist[0] == 'function':
-			
-			# process the params
-			params = taglist[2][1:-1].split(',')
-			if len(params) > 1:
-				raise Exception('Cost functions with more than one parameter are not yet acceptable! (parameters defined: %s)' % str(params)[1:-1])
-			
-			# process the function
-			function = Parser().parse(taglist[3])
-			
-			# process the constants
-			constants = function.variables()
-			if params[0] in constants: # the parameter must be ignored
-				constants.remove(params[0]) 
-			
-			# store the function
-			F[taglist[1]] = [params[0], constants, function]
-			
-		elif taglist[0] == 'node':
-			V.append(Node(taglist[1]))
-			
-		elif taglist[0] == 'dedge' or taglist[0] == 'edge': # dedge is a directed edge
-			
-			# process the cost
-			function = F[taglist[4]] # get the corresponding function
-			param_values = dict(zip(function[1], map(float, taglist[5:]))) # associate constants and values specified in the line (in order of occurrence)
-			param_values[function[0]] = flow # set the function's parameter with the flow value 
-			cost = function[2].evaluate(param_values) # calculate the cost
-			
-			# create the edge(s)
-			E.append(Edge(taglist[1], taglist[2], taglist[3], cost))
-			if taglist[0] == 'edge':
-				E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost))
-			
-		elif taglist[0] == 'od':
-			OD.append(taglist[1])
-		
-		else:
-			raise Exception('Network file does not comply with the specification! (line %d: "%s")' % (lineid, line))
-	
-	
-	return V, E, OD
+    """
+    def __init__(self, name, start, end, cost, func_info):
+        self.name = name
+        self.start = start
+        self.end = end
+        self.cost = cost # represents the edge's cost under free flow (or under the specified flow)
+        self.func_info = func_info # Is a list with the variable and the Parser instance of
+                                   # the function.
+
+    def __repr__(self):
+        return repr(self.name)
+
+def generateGraph(graph_file, print_edges=False, flow=0.0):
+    """
+    Generates the graph from a text file following the specifications(available @
+        http://wiki.inf.ufrgs.br/network_files_specification).
+    """
+    V = [] # vertices
+    E = [] # edges
+    F = {} # cost functions
+    OD = [] # OD pairs
+
+    lineid = 0
+    for line in open(graph_file, 'r'):
+        lineid += 1
+        # ignore \n
+        line = line.rstrip()
+        # ignore comments
+        hash_pos = line.find('#')
+        if hash_pos > -1:
+            line = line[:hash_pos]
+
+        # split the line
+        taglist = line.split()
+        if len(taglist) == 0:
+            continue
+
+        if taglist[0] == 'function':
+            # process the params
+            params = taglist[2][1:-1].split(',')
+            if len(params) > 1:
+                raise Exception('Cost functions with more than one parameter are not yet'\
+                                'acceptable! (parameters defined: %s)' % str(params)[1:-1])
+
+            # process the function
+            function = Parser().parse(taglist[3])
+
+            # process the constants
+            constants = function.variables()
+            if params[0] in constants: # the parameter must be ignored
+                constants.remove(params[0])
+
+            # store the function
+            F[taglist[1]] = [params[0], constants, function]
+
+        elif taglist[0] == 'node':
+            V.append(Node(taglist[1]))
+
+        elif taglist[0] == 'dedge' or taglist[0] == 'edge': # dedge is a directed edge
+            # process the cost
+            function = F[taglist[4]] # get the corresponding function
+            # associate constants and values specified in the line (in order of occurrence)
+            param_values = dict(zip(function[1], map(float, taglist[5:])))
+
+            param_values[function[0]] = flow # set the function's parameter with the flow value
+            cost = function[2].evaluate(param_values) # calculate the cost
+
+            # create the edge(s)
+            E.append(Edge(taglist[1], taglist[2], taglist[3], cost, [function[0], function[2]]))
+            if taglist[0] == 'edge':
+                E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost,
+                              [function[0], function[2]]))
+
+        elif taglist[0] == 'od':
+            OD.append([taglist[1], taglist[2], taglist[3], float(taglist[4])])
+
+        else:
+            raise Exception('Network file does not comply with the specification!'\
+                            '(line %d: "%s")' % (lineid, line))
+
+    if print_edges:
+        for e in E:
+            print("Edge " + str(e.name) + " has length: " + str(e.cost))
+
+    return V, E, OD
 
 # generate the graph from a list of nodes* and a list of edges**
 # * a node here is represented by a string referring to its name
@@ -361,7 +393,7 @@ def run(graph_file, K, OD_pairs=None, flow=0.0):
 	if OD_pairs != None:
 		OD = OD_pairs.split(';')
 	for i in xrange(0,len(OD)):
-		OD[i] = OD[i].split('|')
+		OD[i] = OD[i][0].split('|')
 	
 	# find K shortest paths of each OD-pair
 	print 'ksptable = ['
