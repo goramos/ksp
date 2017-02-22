@@ -77,7 +77,7 @@ def generateGraph(graph_file, flow=0.0):
 	E = [] # edges
 	F = {} # cost functions
 	OD = [] # OD pairs
-	
+
 	lineid = 0
 	for line in open(graph_file, 'r'):
 		
