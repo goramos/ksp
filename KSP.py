@@ -48,9 +48,8 @@ v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in t
                       but B-A in the backward one).
 v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
 					  the links' costs.
-v1.43 (22-Fev-2017) - Documentation for the classes, addition of the func_info attribute in the Edge
-                          class along with minor changes in the generateGraph function regarding these
-                          changes in the class.
+v1.43 (22-Fev-2017) - Documentation for the classes and minor changes in the generateGraph function
+                        to return the OD pair with the demand on that pair.
 <new versions here>
 
 '''
@@ -95,6 +94,14 @@ def generateGraph(graph_file, flow=0.0):
     """
     Generates the graph from a text file following the specifications(available @
         http://wiki.inf.ufrgs.br/network_files_specification).
+    In:
+        graph_file:String = Path to the network(graph) file.
+        flow:Float = Value to sum the cost of the edges.
+
+    Out:
+        V:List = List of vertices or nodes of the graph.
+        E:List = List of the edges of the graph.
+        OD:List = List of the OD pairs in the network.
     """
     V = [] # vertices
     E = [] # edges
