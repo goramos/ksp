@@ -65,7 +65,7 @@ class Node(object):
     def __init__(self, name):
         """
         In:
-            name:string = Name of the node.
+            name:String = Name of the node.
         """
         self.name = name	# name of the node
         self.dist = 1000000	# distance to this node from start node
@@ -75,6 +75,7 @@ class Node(object):
     def __repr__(self):
         return repr(self.name)
 
+
 class Edge(object):
     """
     Represents an edge in the graph.
@@ -83,21 +84,14 @@ class Edge(object):
         start:Node = Start node of the edge.
         end:Node = End node of the edge.
         cost:Float = Cost of the edge.
-        func_info:List = List with the variable and parser instance of the function.
-
     """
-    def __init__(self, name, start, end, cost, func_info):
+    def __init__(self, name, start, end, cost):
         self.name = name
         self.start = start
         self.end = end
         self.cost = cost # represents the edge's cost under free flow (or under the specified flow)
-        self.func_info = func_info # Is a list with the variable and the Parser instance of
-                                   # the function.
 
-    def __repr__(self):
-        return repr(self.name)
-
-def generateGraph(graph_file, print_edges=False, flow=0.0):
+def generateGraph(graph_file, flow=0.0):
     """
     Generates the graph from a text file following the specifications(available @
         http://wiki.inf.ufrgs.br/network_files_specification).
@@ -153,10 +147,9 @@ def generateGraph(graph_file, print_edges=False, flow=0.0):
             cost = function[2].evaluate(param_values) # calculate the cost
 
             # create the edge(s)
-            E.append(Edge(taglist[1], taglist[2], taglist[3], cost, [function[0], function[2]]))
+            E.append(Edge(taglist[1], taglist[2], taglist[3], cost))
             if taglist[0] == 'edge':
-                E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost,
-                              [function[0], function[2]]))
+                E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost))
 
         elif taglist[0] == 'od':
             OD.append([taglist[1], taglist[2], taglist[3], float(taglist[4])])
@@ -164,10 +157,6 @@ def generateGraph(graph_file, print_edges=False, flow=0.0):
         else:
             raise Exception('Network file does not comply with the specification!'\
                             '(line %d: "%s")' % (lineid, line))
-
-    if print_edges:
-        for e in E:
-            print("Edge " + str(e.name) + " has length: " + str(e.cost))
 
     return V, E, OD
 
@@ -450,7 +439,7 @@ def getKRoutes(N, E, origin, destination, K):
 		lout.append([pathToListOfString(path, E), calcPathCost(path, E)])
 		
 	return lout
-	
+
 # initializing procedure
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='KSP v1.42\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
