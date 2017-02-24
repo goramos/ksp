@@ -48,8 +48,7 @@ v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in t
                       but B-A in the backward one).
 v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
 					  the links' costs.
-v1.43 (22-Fev-2017) - Documentation for the classes and minor changes in the generateGraph function
-                        to return the OD pair with the demand on that pair.
+v1.43 (22-Fev-2017) - Documentation for the classes.
 <new versions here>
 
 '''
@@ -159,7 +158,7 @@ def generateGraph(graph_file, flow=0.0):
                 E.append(Edge('%s-%s'%(taglist[3], taglist[2]), taglist[3], taglist[2], cost))
 
         elif taglist[0] == 'od':
-            OD.append([taglist[1], taglist[2], taglist[3], float(taglist[4])])
+            OD.append(taglist[1])
 
         else:
             raise Exception('Network file does not comply with the specification!'\
@@ -389,7 +388,7 @@ def run(graph_file, K, OD_pairs=None, flow=0.0):
 	if OD_pairs != None:
 		OD = OD_pairs.split(';')
 	for i in xrange(0,len(OD)):
-		OD[i] = OD[i][0].split('|')
+		OD[i] = OD[i].split('|')
 	
 	# find K shortest paths of each OD-pair
 	print 'ksptable = ['
