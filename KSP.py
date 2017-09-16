@@ -1,6 +1,6 @@
 #!/usr/bin/python
 '''
-KSP v1.42
+KSP v1.44
 
 Created on February 10, 2014 by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>
 
@@ -49,6 +49,7 @@ v1.32 (19-Set-2016) - Small fix related with dedges' name (A-B is named A-B in t
 v1.42 (12-Nov-2016) - Added parameter to define the flow of vehicles to be used when computing
 					  the links' costs.
 v1.43 (22-Fev-2017) - Documentation for the classes.
+v1.44 (16-Sep-2017) - Equality for Node and Edge class.
 <new versions here>
 
 '''
@@ -73,6 +74,12 @@ class Node(object):
     def __repr__(self):
         return repr(self.name)
 
+    def __eq__(self, other):
+        """
+        Equality based on equality of attributes.
+        """
+        return self.__dict__ == other.__dict__
+
 
 class Edge(object):
     """
@@ -88,6 +95,13 @@ class Edge(object):
         self.start = start
         self.end = end
         self.cost = cost # represents the edge's cost under free flow (or under the specified flow)
+
+    def __eq__(self, other):
+        """
+        Equality based on equality of attributes.
+        """
+        return self.__dict__ == other.__dict__
+
 
 def generateGraph(graph_file, flow=0.0):
     """
@@ -448,7 +462,7 @@ def getKRoutes(N, E, origin, destination, K):
 
 # initializing procedure
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description='KSP v1.42\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
+	parser = argparse.ArgumentParser(description='KSP v1.44\nCompute the K shortest loopless paths between two nodes of a given graph, using Yen\'s algorithm [1]. Complete instructions available at [2].',
 		epilog='GRAPH FILE FORMATTING INSTRUCTIONS' +
 		'\nSee [3] for complete instructions.'+
 		'\n\nREFERENCES' +
