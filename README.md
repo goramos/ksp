@@ -1,9 +1,9 @@
-KSP v1.44
+# KSP v1.44
 
-# DESCRIPTION
+## DESCRIPTION
 Compute the K shortest loopless paths between two nodes of a given graph, using Yen's algorithm [1]. Complete instructions available at [2].
 
-# USAGE
+## USAGE
 python KSP.py [-h] -f FILE -k K [-l OD_LIST] [-n FLOW]
 
 Or:
@@ -17,11 +17,11 @@ Or:
 	-n FLOW      number of vehicles (flow) to consider when computing the links' costs
 
 
-# GRAPH FILE FORMATTING INSTRUCTIONS
+## GRAPH FILE FORMATTING INSTRUCTIONS
 
 See [3] for complete instructions.
 
-# REFERENCES:
+## REFERENCES:
 
 1. Yen, J.Y.: Finding the k shortest loopless paths in a network. Management Science 17(11) (1971) 712-716.
 
@@ -29,6 +29,6 @@ See [3] for complete instructions.
 
 3. http://wiki.inf.ufrgs.br/network_files_specification.
 
-# AUTHOR
+## AUTHOR
 
 Created in February 10, 2014, by Gabriel de Oliveira Ramos <goramos@inf.ufrgs.br>.
