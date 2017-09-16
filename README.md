@@ -1,4 +1,4 @@
-KSP v1.42
+KSP v1.44
 
 DESCRIPTION
 Compute the K shortest loopless paths between two nodes of a given graph, using Yen's algorithm [1]. Complete instructions available at [2].
