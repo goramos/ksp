@@ -74,12 +74,6 @@ class Node(object):
     def __repr__(self):
         return repr(self.name)
 
-    def __eq__(self, other):
-        """
-        Equality based on equality of attributes.
-        """
-        return self.__dict__ == other.__dict__
-
 
 class Edge(object):
     """
@@ -95,12 +89,6 @@ class Edge(object):
         self.start = start
         self.end = end
         self.cost = cost # represents the edge's cost under free flow (or under the specified flow)
-
-    def __eq__(self, other):
-        """
-        Equality based on equality of attributes.
-        """
-        return self.__dict__ == other.__dict__
 
 
 def generateGraph(graph_file, flow=0.0):
