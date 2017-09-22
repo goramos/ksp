@@ -9,12 +9,13 @@ python KSP.py [-h] -f FILE -k K [-l OD_LIST] [-n FLOW]
 Or:
 
 ./KSP.py [-h] -f FILE -k K [-l OD_LIST] [-n FLOW]
-```sh
+```
 arguments:
 	-h, --help	show this help message and exit.
 	-f FILE		the graph file.
 	-k K		number of shortest paths to find.
-	-l OD_LIST	list of OD-pairs, in the format 'O|D;O|D;[and so on]', where O are valid origin nodes, and D are valid destination nodes.
+	-l OD_LIST	list of OD-pairs, in the format 'O|D;O|D;[and so on]', 
+			where O are valid origin nodes, and D are valid destination nodes.
 	-n FLOW		number of vehicles (flow) to consider when computing the links' costs.
 ```
 
