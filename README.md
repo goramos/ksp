@@ -9,7 +9,7 @@ python KSP.py [-h] -f FILE -k K [-l OD_LIST] [-n FLOW]
 Or:
 
 ./KSP.py [-h] -f FILE -k K [-l OD_LIST] [-n FLOW]
-```
+```sh
 arguments:
 	-h, --help	show this help message and exit.
 	-f FILE		the graph file.
