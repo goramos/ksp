@@ -21,7 +21,7 @@ arguments:
 	-n FLOW		number of vehicles (flow) to consider when computing the links' costs.
 ```
 
-# Exemplo 1
+## Exemplo 1
 Obter os 4 caminhos mais curtos para todos os pares OD da rede OW (assumindo que o arquivo da rede está no mesmo diretório do script KSP.py). No terminal, a partir do diretório do KSP, ao digitar:
 
 		python KSP.py -f OW.net -k 4
@@ -54,7 +54,7 @@ obtém-se:
 			]
 		]
 		
-# Exemplo 2
+## Exemplo 2
 Obter os 4 caminhos mais curtos apenas para o par AL da rede OW (assumindo que o arquivo da rede está no mesmo diretório do script KSP.py). No terminal, a partir do diretório do KSP, ao digitar:
 
 		python KSP.py -f OW.net -l 'A|L' -k 4
@@ -69,7 +69,7 @@ obtém-se:
 			]
 		]
 
-# Instruções para chamar o KSP a partir de outros programas
+## Instruções para chamar o KSP a partir de outros programas
 Para chamar o KSP a partir de outros programas escritos em Python, basta importar o KSP e chamá-lo da seguinte forma:
 
 		import KSP
@@ -102,7 +102,7 @@ O resultado do algoritmo (em ambos os casos) é uma lista dupla, onde cada posi�
 		   [['A-C', 'C-D', 'D-G', 'G-J', 'J-I', 'I-L'], 33.0]   ]
 Um exemplo detalhado do KSP para esta finalidade está disponível no arquivo de exemplo ksp_calling_example.py, contido no mesmo diretório do algoritmo.
 
-# Links externos
+## Links externos
 [Explicação simplificada do algoritmo KSP na Wikipedia (em inglês)](https://en.wikipedia.org/wiki/Yen%27s_algorithm)
 
 
