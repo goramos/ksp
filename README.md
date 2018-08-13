@@ -114,7 +114,7 @@ See [[2]](https://github.com/maslab-ufrgs/network_description_syntax) for comple
 
 1. Yen, J.Y.: [Finding the k shortest loopless paths in a network.](https://pubsonline.informs.org/doi/abs/10.1287/mnsc.17.11.712) Management Science 17(11) (1971) 712-716.
 
-2. https://github.com/maslab-ufrgs/network_description_syntax.
+2. https://github.com/maslab-ufrgs/transportation_networks.
 
 ## AUTHOR
 
